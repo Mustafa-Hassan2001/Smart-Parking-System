@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300,700' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<link rel="stylesheet" href="css/style.css">
+	<title>Smart Parking Database</title>
+	<link rel="icon" type="image/png" href="https://www.jinnah.edu/static/uploads/2018/01/logo_maju_karachi_cl.png"/>
+
+	</head>
+	<body>
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<h2 class="heading-section">Vehicles in the Main Parking</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="table-wrap">
+						<table class="table table-bordered table-dark table-hover" id="timetable">
+						  <thead>
+						    <tr>
+						      <th>Plate</th>
+						      <th>UserID</th>
+						      <th>Time In</th>
+						      <th>Time Out</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						    <tr>
+						      
+						    </tr>
+						  </tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-4 text-center mb-5">
+					<h2 class="heading-section"><br></h2>
+					<h3 class="heading-section">Designed By:</h3>
+					<h3 class="heading-section">Mustafa Hassan</h3>
+					<h3 class="heading-section">Hamza Hussain</h3>
+					<h3 class="heading-section">Mahad Rashid</h3>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="js/pjquery.min.js"></script>
+  <script src="js/ppopper.js"></script>
+  <script src="js/pbootstrap.min.js"></script>
+  <script src="js/pmain.js"></script>
+
+
+  <!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<!-- <script src="https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script> -->
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script>
+<!-- <script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-auth.js"></script> -->
+<script src="https://www.gstatic.com/firebasejs/7.24.0/firebase-database.js"></script>
+
+
+<script src="https://www.gstatic.com/firebasejs/8.6.5/firebase-firestore.js"></script>
+<!-- <script src="index.js"></script> -->
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
+
+
+	<script>
+		var config = {
+  apiKey: "AIzaSyCWqoGDAMXns6JnQcFJk3XJLFbraCZLoKs",
+  authDomain: "maju-smartparking.firebaseapp.com",
+  databaseURL: "https://maju-smartparking-default-rtdb.firebaseio.com",
+  projectId: "maju-smartparking",
+  storageBucket: "maju-smartparking.appspot.com",
+  messagingSenderId: "562160473239",
+  appId: "1:562160473239:web:e5c8959f2e3742a97805d2",
+  measurementId: "G-DX2WMR5L9K"
+};
+			
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+			
+			//initialize your firebase
+			firebase.initializeApp(config);
+			// var app = firebase.initializeApp(config);
+			// firebase.analytics();
+			// const defaultAnalytics = firebase.analytics();
+	
+			// firebase.analytics.isSupported().then((isSupported) => {
+			//     if (isSupported) {
+			//     analytics = firebase.analytics();
+			//     }
+			// })
+			
+			
+			firebase.auth.Auth.Persistence.SESSION;
+			var database = firebase.database();
+			
+			var databasee = firebase.database().ref().child('PDB');
+			// var databasee = database.ref().child('maju-iot-default-rtdb/timetable');
+	
+		// var database = firebase.database().ref("maju-iot-default-rtdb/timetable").child(user.uid);
+		databasee.on('value', function(snapshot){
+			console.log(snapshot.val());
+			if(snapshot.exists()){
+				var content = '';
+				console.log(snapshot.val());
+            snapshot.forEach(function(data){
+				let plate = data.val().plate;
+				let stuid = data.val().stuid;
+				let intime = data.val().intime;
+				let outtime = data.val().outtime;
+					content +='<tr>';
+					content += '<td>' + plate + '</td>';
+					content += '<td>' + stuid + '</td>';
+					content += '<td>' + intime + '</td>';
+					content += '<td>' + outtime + '</td>';
+					content += '</tr>';
+				
+				});
+				$('#timetable').append(content);
+			}
+			
+		});
+		
+	</script> 
+	
+
+
+	</body>
+</html>
+
